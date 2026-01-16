@@ -6,47 +6,54 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggleVideoSoundBtn = document.getElementById("toggleVideoSound");
   const toggleMusicBtn = document.getElementById("toggleMusic");
 
-  // Safety: if critical elements missing, do nothing rather than crash.
+
   if (!splash || !bgVideo) {
     console.warn("Missing splash or bgVideo element.");
     return;
   }
 
-  // Browser-safe default: allow autoplay by keeping video muted on load.
+  /* ---------------------------
+     ALWAYS MUTE MP4 (VIDEO) AUDIO
+     --------------------------- */
   bgVideo.muted = true;
-  // Try to ensure video is playing behind the splash.
+  bgVideo.volume = 0;
+
+  // Try to ensure video is playing behind the splash (muted autoplay allowed).
   bgVideo.play().catch(() => {});
 
   function updateButtons() {
+    // Video audio is locked off, so hide/disable that button if it exists.
     if (toggleVideoSoundBtn) {
-      toggleVideoSoundBtn.textContent = bgVideo.muted ? "Unmute Video" : "Mute Video";
+      toggleVideoSoundBtn.textContent = "Video Muted";
+      toggleVideoSoundBtn.disabled = true;
+      toggleVideoSoundBtn.style.opacity = "0.6";
+      toggleVideoSoundBtn.style.cursor = "not-allowed";
     }
+
+    // Music button reflects actual MP3 state
     if (toggleMusicBtn && bgMusic) {
       toggleMusicBtn.textContent = bgMusic.paused ? "Play Music" : "Pause Music";
     }
   }
 
   async function enter() {
-    // Hide splash immediately so the landing is visible even if media playback fails.
+
     splash.classList.add("hidden");
     setTimeout(() => splash.remove(), 500);
 
-    // Unmute + (re)play video
-    try {
-      bgVideo.muted = false;
-      await bgVideo.play();
-    } catch (e) {
-      // Some browsers may still block unmuted playback; user can use button.
-      bgVideo.muted = true;
-      console.log("Video unmute/play blocked:", e);
-    }
 
-    // Start music (optional)
+    bgVideo.muted = true;
+    bgVideo.volume = 0;
+    bgVideo.play().catch(() => {});
+
+
     if (bgMusic) {
       try {
+        bgMusic.muted = false;
+        if (bgMusic.volume === 0) bgMusic.volume = 1.0;
         await bgMusic.play();
       } catch (e) {
-        // Music is often blocked; user can press the button.
+
         console.log("Music play blocked:", e);
       }
     }
@@ -65,21 +72,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Optional controls
-  if (toggleVideoSoundBtn) {
-    toggleVideoSoundBtn.addEventListener("click", async () => {
-      bgVideo.muted = !bgVideo.muted;
-      try {
-        await bgVideo.play();
-      } catch (_) {}
-      updateButtons();
-    });
-  }
-
   if (toggleMusicBtn && bgMusic) {
     toggleMusicBtn.addEventListener("click", async () => {
       try {
         if (bgMusic.paused) {
+          bgMusic.muted = false;
+          if (bgMusic.volume === 0) bgMusic.volume = 1.0;
           await bgMusic.play();
         } else {
           bgMusic.pause();
