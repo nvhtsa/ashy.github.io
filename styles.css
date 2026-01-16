@@ -331,22 +331,12 @@ html,body{height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,
 }
 
 .np-meta{
-  display: grid;
-  grid-template-columns: auto 1fr; /* time | title */
-  align-items: center;
-  column-gap: 10px;
+  display: flex;
+  flex-direction: column;    
+  align-items: center;      
+  gap: 3px;
   min-width: 160px;
   flex: 1;
-}
-
-.np-sub{
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  opacity: 0.65;
-  white-space: nowrap; 
-  line-height: 1;
 }
 
 .np-title{
@@ -357,7 +347,19 @@ html,body{height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: center;
 }
+
+.np-sub{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;      
+  opacity: 0.65;
+  white-space: nowrap;
+  line-height: 1;
+}
+
 
 .np-dot{ opacity: 0.6; }
 
