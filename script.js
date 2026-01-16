@@ -16,6 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+document.querySelector(".content")?.classList.add("visible");
+
+
   /* ---------------------------
      ALWAYS MUTE MP4 (VIDEO) AUDIO
      --------------------------- */
