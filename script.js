@@ -351,34 +351,33 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    function drawTrail() {
-      tctx.globalCompositeOperation = "destination-out";
-      tctx.fillStyle = "rgba(0,0,0,0.10)";
-      tctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-      tctx.globalCompositeOperation = "source-over";
+function drawTrail() {
 
-      for (let i = trail.length - 1; i >= 0; i--) {
-        const p = trail[i];
-        p.life -= FADE_SPEED;
-        if (p.life <= 0) {
-          trail.splice(i, 1);
-          continue;
-        }
+  tctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-        const alpha = p.a * p.life;
-        const radius = p.r * (0.75 + 0.25 * p.life);
-
-        const g = tctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius);
-        g.addColorStop(0, `rgba(${TRAIL_INNER.r},${TRAIL_INNER.g},${TRAIL_INNER.b},${alpha})`);
-        g.addColorStop(0.55, `rgba(${TRAIL_EDGE.r},${TRAIL_EDGE.g},${TRAIL_EDGE.b},${alpha * 0.65})`);
-        g.addColorStop(1, "rgba(255,255,255,0)");
-
-        tctx.fillStyle = g;
-        tctx.beginPath();
-        tctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
-        tctx.fill();
-      }
+  for (let i = trail.length - 1; i >= 0; i--) {
+    const p = trail[i];
+    p.life -= FADE_SPEED;
+    if (p.life <= 0) {
+      trail.splice(i, 1);
+      continue;
     }
+
+    const alpha = p.a * p.life;
+    const radius = p.r * (0.85 + 0.15 * p.life);
+
+    const g = tctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius);
+    g.addColorStop(0, `rgba(${TRAIL_INNER.r},${TRAIL_INNER.g},${TRAIL_INNER.b},${alpha})`);
+    g.addColorStop(0.55, `rgba(${TRAIL_EDGE.r},${TRAIL_EDGE.g},${TRAIL_EDGE.b},${alpha * 0.65})`);
+    g.addColorStop(1, "rgba(255,255,255,0)");
+
+    tctx.fillStyle = g;
+    tctx.beginPath();
+    tctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+    tctx.fill();
+  }
+}
+
 
     function loop() {
       drawRain();
