@@ -218,3 +218,159 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updateButtons();
 });
+
+// ===== FX: Rain + Cursor Trail (Canvas) =====
+(() => {
+  const rainCanvas = document.getElementById("fxRain");
+  const trailCanvas = document.getElementById("fxTrail");
+  if (!rainCanvas || !trailCanvas) return;
+
+  const rctx = rainCanvas.getContext("2d", { alpha: true });
+  const tctx = trailCanvas.getContext("2d", { alpha: true });
+
+  const DPR = Math.min(2, window.devicePixelRatio || 1);
+
+  function resize() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+
+    for (const c of [rainCanvas, trailCanvas]) {
+      c.width = Math.floor(w * DPR);
+      c.height = Math.floor(h * DPR);
+      c.style.width = w + "px";
+      c.style.height = h + "px";
+    }
+
+    rctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    tctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  window.addEventListener("resize", resize, { passive: true });
+  resize();
+
+  // --- Rain ---
+  const drops = [];
+  const DROP_COUNT = 160;        // lower = subtler + faster
+  const WIND = 0.35;             // sideways drift
+  const SPEED_MIN = 6;
+  const SPEED_MAX = 14;
+  const LEN_MIN = 8;
+  const LEN_MAX = 18;
+
+  function rand(min, max) { return Math.random() * (max - min) + min; }
+
+  function initDrops() {
+    drops.length = 0;
+    for (let i = 0; i < DROP_COUNT; i++) {
+      drops.push({
+        x: rand(0, window.innerWidth),
+        y: rand(0, window.innerHeight),
+        v: rand(SPEED_MIN, SPEED_MAX),
+        l: rand(LEN_MIN, LEN_MAX),
+        a: rand(0.10, 0.28),
+      });
+    }
+  }
+  initDrops();
+
+  // --- Cursor Trail ---
+  const trail = [];
+  const MAX_TRAIL = 28;
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let lastMove = performance.now();
+
+  window.addEventListener("pointermove", (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    lastMove = performance.now();
+
+    trail.push({
+      x: mouseX,
+      y: mouseY,
+      r: rand(10, 18),
+      a: 0.22,
+      life: 1.0
+    });
+
+    while (trail.length > MAX_TRAIL) trail.shift();
+  }, { passive: true });
+
+  // Fade helpers (draw with low alpha instead of clearing for smoothness)
+  function fadeCanvas(ctx) {
+    ctx.fillStyle = "rgba(0,0,0,0.12)";
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  function drawRain() {
+    rctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+    rctx.lineWidth = 1;
+    rctx.lineCap = "round";
+
+    for (const d of drops) {
+      rctx.strokeStyle = `rgba(255,255,255,${d.a})`;
+      rctx.beginPath();
+      rctx.moveTo(d.x, d.y);
+      rctx.lineTo(d.x + WIND * d.l, d.y + d.l);
+      rctx.stroke();
+
+      d.x += WIND * (d.v * 0.35);
+      d.y += d.v;
+
+      if (d.y > window.innerHeight + 20) {
+        d.y = -20;
+        d.x = rand(0, window.innerWidth);
+      }
+      if (d.x > window.innerWidth + 40) d.x = -40;
+    }
+  }
+
+  function drawTrail() {
+    tctx.fillStyle = "rgba(0,0,0,0.10)";
+    tctx.globalCompositeOperation = "destination-out";
+    tctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    tctx.globalCompositeOperation = "source-over";
+
+    const now = performance.now();
+
+    for (let i = trail.length - 1; i >= 0; i--) {
+      const p = trail[i];
+      p.life -= 0.045; 
+      if (p.life <= 0) {
+        trail.splice(i, 1);
+        continue;
+      }
+
+      const alpha = p.a * p.life;
+      const radius = p.r * (0.75 + 0.25 * p.life);
+
+      const g = tctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius);
+      g.addColorStop(0, `rgba(255,255,255,${alpha})`);
+      g.addColorStop(1, `rgba(255,255,255,0)`);
+
+      tctx.fillStyle = g;
+      tctx.beginPath();
+      tctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+      tctx.fill();
+    }
+    
+    if (now - lastMove > 1200 && trail.length) {
+      for (const p of trail) p.life -= 0.02;
+    }
+  }
+
+  let last = performance.now();
+  function loop(ts) {
+    const dt = Math.min(33, ts - last);
+    last = ts;
+
+    if (dt < 40) drawRain();
+    drawTrail();
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+
