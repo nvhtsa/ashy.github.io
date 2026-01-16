@@ -286,7 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
           y: rand(0, window.innerHeight),
           v: rand(SPEED_MIN, SPEED_MAX),
           l: rand(LEN_MIN, LEN_MAX),
-          a: rand(0.10, 0.26),
+          a: rand(0.22, 0.45), 
         });
       }
     }
@@ -326,8 +326,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       wind += (windTarget - wind) * 0.08;
 
-      rctx.lineWidth = 1;
+      rctx.lineWidth = 1.25;
       rctx.lineCap = "round";
+      rctx.shadowColor = "rgba(200,220,255,0.25)";
+      rctx.shadowBlur = 6;
 
       for (const d of drops) {
         
