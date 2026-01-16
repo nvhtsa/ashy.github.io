@@ -33,3 +33,29 @@ html,body{height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,
 .splash-sub{font-size:13px;opacity:.75}
 
 .splash.hidden{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .45s ease,visibility .45s ease}
+
+.audio-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.audio-controls input[type="range"] {
+  width: 180px;
+}
+
+.vol-label {
+  opacity: 0.8;
+  font-size: 14px;
+}
+
+#musicVolumeValue {
+  opacity: 0.85;
+  font-size: 14px;
+  min-width: 42px;
+  text-align: left;
+}
+
