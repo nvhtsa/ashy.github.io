@@ -3,30 +3,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const bgVideo = document.getElementById("bgVideo");
   const bgMusic = document.getElementById("bgMusic");
 
-  console.log("splash:", splash);
-  console.log("bgVideo:", bgVideo);
-  console.log("bgMusic:", bgMusic);
+  if (!splash || !bgVideo) return;
 
-  if (!splash) {
-    alert('DEBUG: No #splash element found in HTML.');
-    return;
-  }
+  // Gate entry until click
+  bgVideo.muted = true;
+  bgVideo.pause();
+  if (bgMusic) bgMusic.pause();
 
-  // Make clicks obvious no matter what
-  splash.style.outline = "4px solid red";
-  splash.style.zIndex = "999999";
-  splash.style.pointerEvents = "auto";
-
-  splash.addEventListener("click", () => {
-    alert("DEBUG: Splash click works ✅");
-
-    // Try to start media (won't stop the debug alert even if blocked)
-    if (bgVideo) {
+  splash.addEventListener("click", async () => {
+    try {
       bgVideo.muted = false;
-      bgVideo.play().catch(console.log);
-    }
-    if (bgMusic) {
-      bgMusic.play().catch(console.log);
+      await bgVideo.play();
+      if (bgMusic) await bgMusic.play();
+    } catch (e) {
+      console.log("Autoplay blocked:", e);
     }
 
     splash.classList.add("hidden");
