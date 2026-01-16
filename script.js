@@ -1,25 +1,22 @@
+const splash = document.getElementById("splash");
 const bgVideo = document.getElementById("bgVideo");
-const muteVideoBtn = document.getElementById("muteVideoBtn");
-
 const bgMusic = document.getElementById("bgMusic");
-const musicBtn = document.getElementById("musicBtn");
 
-muteVideoBtn.addEventListener("click", () => {
-  bgVideo.muted = !bgVideo.muted;
-  muteVideoBtn.textContent = bgVideo.muted ? "Unmute Video" : "Mute Video";
-});
+bgVideo.muted = true;
+bgVideo.pause();
+bgMusic.pause();
 
-musicBtn.addEventListener("click", async () => {
+splash.addEventListener("click", async () => {
   try {
-    if (bgMusic.paused) {
-      await bgMusic.play();
-      musicBtn.textContent = "Pause Music";
-    } else {
-      bgMusic.pause();
-      musicBtn.textContent = "Play Music";
-    }
+    bgVideo.muted = false;
+    await bgVideo.play();
+    await bgMusic.play();
   } catch (e) {
-    console.log("Music play blocked:", e);
-    alert("Your browser blocked audio until you interact with the page. Click Play Music again.");
+    console.log("Autoplay blocked:", e);
   }
+
+  splash.classList.add("hidden");
+
+  // Optional: fully remove splash after animation
+  setTimeout(() => splash.remove(), 700);
 });
