@@ -27,12 +27,112 @@ html,body{height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,
 .hint{font-size:12px;opacity:.7;max-width:420px}
 
 /* Splash */
-.splash{position:fixed;inset:0;z-index:999999;background:#000;display:grid;place-items:center;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
-.splash-inner{text-align:center;display:grid;gap:10px;padding:24px 18px;border-radius:18px;background:rgba(255,255,255,.06);backdrop-filter:blur(10px);box-shadow:0 10px 60px rgba(0,0,0,.55)}
-.splash-title{font-size:clamp(28px,6vw,56px);letter-spacing:.14em}
-.splash-sub{font-size:13px;opacity:.75}
+/* =========================
+   Splash (Fluid Upgrade)
+   ========================= */
 
-.splash.hidden{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .45s ease,visibility .45s ease}
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  /* Depth + softness */
+  background:
+    radial-gradient(1000px 700px at 50% 40%,
+      rgba(255,255,255,0.08),
+      rgba(0,0,0,0.85) 55%,
+      rgba(0,0,0,0.95) 100%);
+
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  filter: blur(0);
+
+  transition:
+    opacity 520ms cubic-bezier(.22,1,.36,1),
+    transform 520ms cubic-bezier(.22,1,.36,1),
+    filter 520ms cubic-bezier(.22,1,.36,1),
+    visibility 520ms;
+}
+
+/* Ambient glow */
+.splash::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08), transparent 55%),
+    radial-gradient(circle at 70% 60%, rgba(255,255,255,0.06), transparent 60%);
+  filter: blur(30px);
+  animation: splashGlow 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes splashGlow {
+  0%, 100% { transform: translate(0,0) scale(1); opacity: .85; }
+  50% { transform: translate(12px,-10px) scale(1.05); opacity: 1; }
+}
+
+/* Card */
+.splash-inner {
+  text-align: center;
+  display: grid;
+  gap: 12px;
+  padding: 26px 30px;
+  border-radius: 18px;
+
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+
+  animation: floaty 2.8s ease-in-out infinite;
+}
+
+@keyframes floaty {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Text */
+.splash-title {
+  font-size: clamp(28px, 5vw, 56px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.splash-sub {
+  font-size: 13px;
+  opacity: 0.75;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Exit */
+.splash.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .splash::before,
+  .splash-inner {
+    animation: none !important;
+  }
+
+  .splash {
+    transition: opacity 240ms ease, visibility 240ms ease;
+  }
+}
+
 
 /* =========================
    Audio Controls (Minimal)
