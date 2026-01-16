@@ -3,32 +3,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const bgVideo = document.getElementById("bgVideo");
   const bgMusic = document.getElementById("bgMusic");
 
+  console.log("splash:", splash);
+  console.log("bgVideo:", bgVideo);
+  console.log("bgMusic:", bgMusic);
+
   if (!splash) {
-    console.error('No element with id="splash" found.');
+    alert('DEBUG: No #splash element found in HTML.');
     return;
   }
-  if (!bgVideo) {
-    console.error('No element with id="bgVideo" found.');
-    return;
-  }
-  if (!bgMusic) {
-    console.warn('No element with id="bgMusic" found (music won’t play).');
-  }
 
-  // defaults
-  bgVideo.muted = true;
+  // Make clicks obvious no matter what
+  splash.style.outline = "4px solid red";
+  splash.style.zIndex = "999999";
+  splash.style.pointerEvents = "auto";
 
-  // If you want the splash to truly gate entry, pause media until click:
-  bgVideo.pause();
-  if (bgMusic) bgMusic.pause();
+  splash.addEventListener("click", () => {
+    alert("DEBUG: Splash click works ✅");
 
-  splash.addEventListener("click", async () => {
-    try {
+    // Try to start media (won't stop the debug alert even if blocked)
+    if (bgVideo) {
       bgVideo.muted = false;
-      await bgVideo.play();
-      if (bgMusic) await bgMusic.play();
-    } catch (e) {
-      console.log("Autoplay blocked:", e);
+      bgVideo.play().catch(console.log);
+    }
+    if (bgMusic) {
+      bgMusic.play().catch(console.log);
     }
 
     splash.classList.add("hidden");
