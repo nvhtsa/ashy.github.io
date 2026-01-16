@@ -84,12 +84,24 @@ document.addEventListener("DOMContentLoaded", () => {
   splash.addEventListener("click", enter);
 
   // Enter via keyboard
-  splash.addEventListener("keydown", (ev) => {
-    if (ev.key === "Enter" || ev.key === " ") {
-      ev.preventDefault();
-      enter();
-    }
-  });
+  splash.addEventListener("click", async (ev) => {
+  // --- Subtle click ripple ---
+  const r = document.createElement("span");
+  r.className = "splash-ripple";
+
+  // Position ripple at click/tap point
+  const x = ev.clientX ?? (ev.touches && ev.touches[0]?.clientX) ?? window.innerWidth / 2;
+  const y = ev.clientY ?? (ev.touches && ev.touches[0]?.clientY) ?? window.innerHeight / 2;
+  r.style.left = `${x}px`;
+  r.style.top = `${y}px`;
+
+  splash.appendChild(r);
+  setTimeout(() => r.remove(), 700);
+
+  // Proceed to enter
+  await enter();
+});
+
 
   // Toggle music button
   if (toggleMusicBtn && bgMusic) {
