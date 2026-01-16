@@ -332,9 +332,21 @@ html,body{height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,
 
 .np-meta{
   display: grid;
-  gap: 2px;
+  grid-template-columns: auto 1fr; /* time | title */
+  align-items: center;
+  column-gap: 10px;
   min-width: 160px;
   flex: 1;
+}
+
+.np-sub{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  opacity: 0.65;
+  white-space: nowrap; 
+  line-height: 1;
 }
 
 .np-title{
@@ -345,14 +357,6 @@ html,body{height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.np-sub{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  opacity: 0.65;
 }
 
 .np-dot{ opacity: 0.6; }
