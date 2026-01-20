@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelector(".content")?.classList.remove("visible");
 
-  const DEFAULT_VOL = 0.3;
+  const DEFAULT_VOL = 0.1;
   let userEntered = false;
   let trackIndex = 0;
 
