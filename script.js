@@ -55,6 +55,9 @@ document.addEventListener("DOMContentLoaded", () => {
     { title: "TORN – Ramzoid", src: "assets/media/track1.mp3" },
     { title: "JUST TOUCHED DOWN – Westwood", src: "assets/media/track2.mp3" },
     { title: "LIVING IN MY HEAD – Friz", src: "assets/media/track3.mp3" },
+    { title: "puke! - Chris Miles", src: "assets/media/track4.mp3" },
+    { title: "DENNIS TYPE BEAT - hooligan chase", src: "assets/media/track5.mp3" },
+    
   ];
 
   const npTitle = document.getElementById("npTitle");
