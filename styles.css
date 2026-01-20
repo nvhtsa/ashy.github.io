@@ -140,7 +140,7 @@ html,body{height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,
 .splash-title {
   font-size: clamp(26px, 4.8vw, 54px);
   letter-spacing: 0.18em;
-  text-transform: uppercase;
+  text-transform: lowercase;
   line-height: 1.1;
   color: rgba(255,255,255,0.92);
 }
@@ -149,7 +149,7 @@ html,body{height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,
   font-size: 12px;
   opacity: 0.70;
   letter-spacing: 0.12em;
-  text-transform: uppercase;
+  text-transform: lowercase;
 }
 
 .splash-ripple {
@@ -357,7 +357,7 @@ html,body{height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,
 .np-title{
   font-size: 12px;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
+  text-transform: lowercase;
   opacity: 0.92;
   white-space: nowrap;
   overflow: hidden;
